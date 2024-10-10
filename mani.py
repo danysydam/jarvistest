@@ -12,8 +12,8 @@ import pyttsx3  # Text-to-speech conversion
 import subprocess
 import webbrowser
 from playsound import playsound
-
-from config import  GEMINI_API_KEY # Import the API key from config
+import google.generativeai as genai
+genai.configure(api_key=os.environ.get("API_KEY", "AIzaSyAHR-VibLkLg15S99FvIWjr26UjeRz9dPQ"))# Import the API key from config
 
 # Set the OpenAI API key
 
@@ -64,7 +64,14 @@ def respond(command):
         result = git_push()
         speak(result)
         return False
-
+    elif command.startswith("ask gemini"):
+        question = command.replace("ask gemini", "").strip()  # Remove "ask gemini" from the command
+        speak(f"Let me ask Gemini: {question}.")
+        result = ask_gemini(question)  # Ask the Gemini AI the question
+        print(result)  # Print the response from Gemini to the console
+         # Make Jarvis speak the response
+        return False
+    
     # Command for committing with a voice message
     elif "commit" in command and "message" in command:
         match = re.search(r"commit with message\s+['\"]?(.*?)['\"]?$", command)
@@ -173,7 +180,7 @@ def respond(command):
 
 
     # Exit Jarvis
-    elif 'bye' in command or 'quit' in command:
+    elif 'escape' in command or 'quit' in command:
         speak("Goodbye!")
         return True  # Indicate to exit the loop
     
@@ -347,6 +354,23 @@ def get_disk_space():
     free_space = disk.free // (2**30)    # Convert to GB
 
     return f"Total disk space: {total_space}GB, Used: {used_space}GB, Free: {free_space}GB."
+# Updated ask_gemini function with your API key
+def ask_gemini(prompt):
+    try:
+        model = genai.GenerativeModel("gemini-1.5-flash")  # Using the "gemini-1.5-flash" model
+        response = model.generate_content(prompt)
+        return response.text if response and response.text else "I couldn't get a response."
+    except Exception as e:
+        return f"An error occurred with Gemini AI: {str(e)}"
+def ask_gemini(prompt):
+    try:
+        model = genai.GenerativeModel("gemini-1.5-flash")  # Using the "gemini-1.5-flash" model
+        response = model.generate_content(prompt)
+        return response.text if response and response.text else "I couldn't get a response."
+    except Exception as e:
+        return f"An error occurred with Gemini AI: {str(e)}"
+
+
 
 if __name__ == "__main__":
     speak("Hello, I am Jarvis. How can I assist you today?")
