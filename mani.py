@@ -14,6 +14,7 @@ import subprocess
 import webbrowser
 from playsound import playsound
 import google.generativeai as genai
+from openmanager import open_application
 genai.configure(api_key=os.environ.get("API_KEY", "AIzaSyAHR-VibLkLg15S99FvIWjr26UjeRz9dPQ"))# Import the API key from config
 
 # Set the OpenAI API key
@@ -105,12 +106,13 @@ def respond(command):
         return False
 
     # Open applications
-    elif re.search(r"(open|start|launch)\s+(notepad|chrome|calculator|word)", command):
+    elif re.search(r"(open|start|launch)\s+(notepad|chrome|calculator|word|settings|crop|files|d drive|e drive|c drive|g drive|f drive|ms store|edge|ms teams|mail|fire fox|brave|task manager)", command):
         app_name = re.search(
-            r"(notepad|chrome|calculator|word)", command).group(0)
+            r"(notepad|chrome|calculator|word|settings|crop|files|d drive|e drive|c drive|g drive|f drive|ms store|edge|ms teams|mail|fire fox|brave|task manager)", command).group(0)
         speak(f"Opening {app_name}.")
         open_application(app_name)
         return False
+    
 
     # Open websites
     elif re.search(r"go to\s+(.*\..*)", command):
@@ -224,25 +226,8 @@ def get_current_time(country):
 
     return current_time
 
-# Function to open applications
-def open_application(app_name):
-    try:
-        if 'notepad' in app_name:
-            subprocess.Popen(['notepad.exe'])
-        elif 'chrome' in app_name:
-            subprocess.Popen(
-                ['C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'])
-        elif 'calculator' in app_name:
-            subprocess.Popen(['calc.exe'])
-        elif 'word' in app_name:
-            subprocess.Popen(
-                ['C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE'])
-        else:
-            speak("Sorry, I cannot open that application.")
-    except FileNotFoundError:
-        speak("The application was not found. Please check the installation.")
-    except Exception as e:
-        speak(f"Sorry, I encountered an error: {str(e)}")
+
+
 
 # Function to open a website
 def open_website(website_name):
@@ -363,7 +348,6 @@ def ask_gemini(prompt):
         return response.text if response and response.text else "I couldn't get a response."
     except Exception as e:
         return f"An error occurred with Gemini AI: {str(e)}"
-
 
 
 
