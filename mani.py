@@ -363,13 +363,7 @@ def ask_gemini(prompt):
         return response.text if response and response.text else "I couldn't get a response."
     except Exception as e:
         return f"An error occurred with Gemini AI: {str(e)}"
-def ask_gemini(prompt):
-    try:
-        model = genai.GenerativeModel("gemini-1.5-flash")  # Using the "gemini-1.5-flash" model
-        response = model.generate_content(prompt)
-        return response.text if response and response.text else "I couldn't get a response."
-    except Exception as e:
-        return f"An error occurred with Gemini AI: {str(e)}"
+
 
 
 
