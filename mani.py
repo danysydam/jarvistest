@@ -229,6 +229,8 @@ def get_current_time(country):
 
 
 
+
+
 # Function to open a website
 def open_website(website_name):
     webbrowser.open(f"http://{website_name}")  # Open the website
