@@ -1,6 +1,7 @@
 import subprocess
 import os
 
+
 def open_application(app_name):
     try:
         if 'notepad' in app_name:
@@ -46,6 +47,7 @@ def open_application(app_name):
         elif 'task manager' in app_name:
             subprocess.Popen(['taskmgr'])
         else:
+
             speak("Sorry, I cannot open that application.")
     except FileNotFoundError:
         speak("The application was not found. Please check the installation.")

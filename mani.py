@@ -1,5 +1,3 @@
-#done!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#yoooooooooooo
 import requests
 from datetime import datetime  # Corrected import for the datetime class
 import os
@@ -15,9 +13,9 @@ import webbrowser
 from playsound import playsound
 import google.generativeai as genai
 from openmanager import open_application
+from tqdm import tqdm
+from downloadlinks import download_links
 genai.configure(api_key=os.environ.get("API_KEY", "AIzaSyAHR-VibLkLg15S99FvIWjr26UjeRz9dPQ"))# Import the API key from config
-
-# Set the OpenAI API key
 
 
 # Initialize the text-to-speech engine
@@ -90,6 +88,7 @@ def respond(command):
         result = git_add()
         speak(result)
         return False
+    
     # Handle greetings and inquiries
     elif re.search(r"(hello|hi|hey)", command):
         speak("Hello! How can I assist you today?")
@@ -97,7 +96,14 @@ def respond(command):
     elif re.search(r"(your name|who are you)", command):
         speak("I am Jarvis, your personal assistant.")
         return False
-
+    elif command.startswith("download "):
+        software_name = command.replace("download ", "").strip().lower()
+        if software_name in download_links:
+            speak(f"Opening the download page for {software_name}.")
+            webbrowser.open(download_links[software_name])
+        else:
+            speak(f"Sorry, I don't have a download link for {software_name}.")
+        return False
     # Time commands
     elif re.search(r"time in (india|usa|uk|canada)", command):
         country = re.search(r"(india|usa|uk|canada)", command).group(0)
@@ -226,6 +232,20 @@ def get_current_time(country):
 
     return current_time
 
+
+
+def get_user_input(prompt):
+    """Helper function to get user input with retry and close option."""
+    while True:
+        speak(prompt)
+        user_input = listen()
+        if user_input:
+            if user_input.lower() == "close":
+                speak("Operation has been canceled.")
+                return None
+            return user_input
+        else:
+            speak("I didn't catch that. Please repeat.")
 
 
 
